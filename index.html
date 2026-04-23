@@ -39,8 +39,6 @@ button{background:var(--dark);color:#fff;border:none;cursor:pointer}
 
 <div class="header">
 <h1>Catálogo de Vehículos</h1>
-<div class="small">Lectura directa de <b>catalogo.json</b></div>
-<div id="status">Cargando catálogo...</div>
 </div>
 
 <div class="top">
@@ -220,7 +218,7 @@ apply();
 }
 
 async function loadJSON(){
-document.getElementById("status").innerText="Cargando catálogo...";
+
 try{
   const response = await fetch("./catalogo.json?v="+Date.now(), {cache:"no-store"});
   if(!response.ok) throw new Error("No se encontró catalogo.json");
@@ -231,9 +229,9 @@ try{
   fillFilters();
   apply();
 
-  document.getElementById("status").innerText="Catálogo cargado: "+vehicles.length+" vehículos";
+  
 }catch(error){
-  document.getElementById("status").innerText="No se pudo cargar catalogo.json";
+  
   console.error(error);
 }
 }
