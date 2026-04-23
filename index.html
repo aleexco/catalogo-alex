@@ -5,33 +5,182 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Catálogo Vehículos</title>
 <style>
-:root{--bg:#f3f4f6;--card:#fff;--line:#e5e7eb;--text:#111827;--muted:#6b7280;--dark:#111827}
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --line:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --dark:#111827;
+  --soft:#f9fafb;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-.wrap{max-width:1280px;margin:auto;padding:16px}
-.header,.box,.card{background:#fff;border:1px solid var(--line);border-radius:22px}
-.header{padding:24px;margin-bottom:16px}
-h1{margin:0 0 6px;font-size:32px}
-.small{font-size:14px;color:var(--muted)}
-.top{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-bottom:16px}
-.box{padding:16px}
-.filters{display:grid;gap:10px}
-input,select,button{width:100%;padding:12px;border-radius:14px;border:1px solid var(--line);font:inherit}
-button{background:var(--dark);color:#fff;border:none;cursor:pointer}
-.hero{display:grid;grid-template-columns:340px 1fr;gap:16px}
-.hero img,.card img{width:100%;height:230px;object-fit:cover;border-radius:18px;background:#ddd}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{padding:14px}
-.pr3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
-.pr2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
-.p,.s{background:#f9fafb;border:1px solid var(--line);border-radius:14px;padding:10px}
-.p b,.s b{display:block;margin-top:4px}
-.specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.actions button:last-child{background:#fff;color:#111;border:1px solid var(--line)}
-#status{margin-top:8px;color:#2563eb}
-@media(max-width:980px){.top,.hero{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:640px){.wrap{padding:12px}h1{font-size:26px}.grid{grid-template-columns:1fr}.pr3{grid-template-columns:repeat(3,1fr)}.pr2{grid-template-columns:repeat(2,1fr)}.specs{grid-template-columns:repeat(2,1fr)}}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+.wrap{
+  width:100%;
+  max-width:1280px;
+  margin:0 auto;
+  padding:clamp(10px,2vw,18px);
+}
+.header,.box,.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:clamp(16px,2vw,24px);
+}
+.header{
+  padding:clamp(16px,3vw,26px);
+  margin-bottom:16px;
+}
+h1{
+  margin:0;
+  font-size:clamp(24px,4vw,36px);
+  line-height:1.1;
+}
+h2{
+  margin:0 0 6px;
+  font-size:clamp(22px,3vw,30px);
+  line-height:1.15;
+}
+h3{
+  margin:0 0 6px;
+  font-size:clamp(18px,2.5vw,22px);
+  line-height:1.2;
+}
+.small{
+  font-size:clamp(12px,1.8vw,14px);
+  color:var(--muted);
+  line-height:1.35;
+}
+.top{
+  display:grid;
+  grid-template-columns:minmax(260px,320px) minmax(0,1fr);
+  gap:16px;
+  margin-bottom:16px;
+  align-items:start;
+}
+.box{padding:clamp(12px,2vw,16px)}
+.filters{
+  display:grid;
+  gap:10px;
+}
+input,select,button{
+  width:100%;
+  min-height:44px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  font:inherit;
+  font-size:16px;
+}
+button{
+  background:var(--dark);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+.hero{
+  display:grid;
+  grid-template-columns:minmax(260px,340px) minmax(0,1fr);
+  gap:16px;
+  align-items:start;
+}
+.hero img,.card img{
+  width:100%;
+  aspect-ratio:16/10;
+  height:auto;
+  object-fit:cover;
+  border-radius:18px;
+  background:#ddd;
+  display:block;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:16px;
+}
+.card{
+  padding:clamp(12px,2vw,16px);
+  overflow:hidden;
+}
+.pr3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin:10px 0;
+}
+.pr2{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+.p,.s{
+  background:var(--soft);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:clamp(8px,1.6vw,11px);
+  min-width:0;
+}
+.p small,.s small{
+  display:block;
+  color:var(--muted);
+  font-size:clamp(10px,1.7vw,12px);
+  line-height:1.2;
+}
+.p b,.s b{
+  display:block;
+  margin-top:4px;
+  font-size:clamp(12px,2vw,16px);
+  line-height:1.15;
+  word-break:break-word;
+}
+.specs{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px;
+}
+.actions button:last-child{
+  background:#fff;
+  color:#111;
+  border:1px solid var(--line);
+}
+@media(max-width:900px){
+  .top{grid-template-columns:1fr}
+  .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .filters button{grid-column:1/-1}
+  .hero{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .wrap{padding:10px}
+  .header{padding:18px}
+  .filters{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .hero img,.card img{aspect-ratio:16/9}
+  .pr3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .pr2{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .specs{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .actions{grid-template-columns:1fr}
+  .p,.s{padding:8px 6px}
+  .p b,.s b{font-size:12px}
+  .p small,.s small{font-size:10px}
+}
+@media(max-width:380px){
+  .pr3{grid-template-columns:1fr}
+  .pr2{grid-template-columns:1fr}
+  .specs{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -52,14 +201,14 @@ button{background:var(--dark);color:#fff;border:none;cursor:pointer}
 <option value="low">Precio menor</option>
 <option value="high">Precio mayor</option>
 </select>
-<button onclick="clearFilters()">Limpiar</button>
+<button onclick="clearFilters()">Limpiar filtros</button>
 </div>
 </div>
 
 <div class="box hero">
-<img id="heroImg" src="">
+<img id="heroImg" src="" alt="">
 <div>
-<h2 id="heroTitle">Esperando datos...</h2>
+<h2 id="heroTitle">Catálogo</h2>
 <div class="small" id="heroVersion"></div>
 
 <div class="pr3">
@@ -218,7 +367,6 @@ apply();
 }
 
 async function loadJSON(){
-
 try{
   const response = await fetch("./catalogo.json?v="+Date.now(), {cache:"no-store"});
   if(!response.ok) throw new Error("No se encontró catalogo.json");
@@ -228,10 +376,7 @@ try{
 
   fillFilters();
   apply();
-
-  
 }catch(error){
-  
   console.error(error);
 }
 }
