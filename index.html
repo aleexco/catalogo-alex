@@ -184,7 +184,7 @@ button{
 .search-result-sub{color:var(--muted);font-size:12px;margin-top:3px}
 .search-result-price{color:#111827;font-size:12px;margin-top:5px}
 .result-count{margin-top:4px;font-size:13px;color:var(--muted)}
-.card.highlight{outline:3px solid #111827;outline-offset:2px}
+.card.highlight,.hero.highlight{outline:3px solid #111827;outline-offset:2px}
 @media(max-width:900px){
   .top{grid-template-columns:1fr}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -430,28 +430,20 @@ box.querySelectorAll(".search-result-item[data-idx]").forEach(btn=>{
 function goToVehicle(idx){
 const vehicle=vehicles[idx];
 if(!vehicle) return;
-const currentList=getFiltered();
 
-if(!currentList.includes(vehicle)){
-  document.getElementById("search").value="";
-  document.getElementById("brand").value="";
-  document.getElementById("fuel").value="";
-  document.getElementById("sort").value="";
-  render(vehicles);
-  renderSearchResults([]);
-} else {
-  render(currentList);
-}
-
+// Envía el resultado seleccionado directamente a la ficha extendida superior
 hero(vehicle, idx);
-setTimeout(()=>{
-  const card=document.getElementById("card-"+idx);
-  if(card){
-    card.scrollIntoView({behavior:"smooth", block:"center"});
-    card.classList.add("highlight");
-    setTimeout(()=>card.classList.remove("highlight"),1600);
-  }
-},80);
+
+// Oculta el listado de resultados para dejar limpia la vista
+document.getElementById("searchResults").classList.remove("active");
+
+// Lleva la pantalla a la ficha extendida, no a la tarjeta
+const ficha=document.querySelector(".hero");
+if(ficha){
+  ficha.scrollIntoView({behavior:"smooth", block:"start"});
+  ficha.classList.add("highlight");
+  setTimeout(()=>ficha.classList.remove("highlight"),1600);
+}
 }
 
 function apply(){
