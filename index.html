@@ -156,6 +156,35 @@ button{
   color:#111;
   border:1px solid var(--line);
 }
+
+.search-results{
+  display:none;
+  margin-top:8px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+  overflow:hidden;
+}
+.search-results.active{display:block}
+.search-result-item{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:#fff;
+  color:var(--text);
+  border:none;
+  border-bottom:1px solid var(--line);
+  border-radius:0;
+  padding:12px;
+  cursor:pointer;
+}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover{background:#f9fafb}
+.search-result-title{font-weight:700;font-size:14px;line-height:1.25}
+.search-result-sub{color:var(--muted);font-size:12px;margin-top:3px}
+.search-result-price{color:#111827;font-size:12px;margin-top:5px}
+.result-count{margin-top:4px;font-size:13px;color:var(--muted)}
+.card.highlight{outline:3px solid #111827;outline-offset:2px}
 @media(max-width:900px){
   .top{grid-template-columns:1fr}
   .filters{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -194,6 +223,8 @@ button{
 <div class="box">
 <div class="filters">
 <input id="search" placeholder="Buscar marca, modelo o versión">
+<div id="resultCount" class="result-count"></div>
+<div id="searchResults" class="search-results"></div>
 <select id="brand"><option value="">Todas las marcas</option></select>
 <select id="fuel"><option value="">Todo combustible</option></select>
 <select id="sort">
@@ -301,6 +332,7 @@ list.forEach((v,i)=>{
   const idx = vehicles.indexOf(v);
   const card=document.createElement("div");
   card.className="card";
+  card.id="card-"+idx;
   card.innerHTML = `
     <img src="${image(v,i)}" alt="">
     <h3>${text(v.brand)} ${text(v.model)}</h3>
@@ -323,8 +355,7 @@ list.forEach((v,i)=>{
     </div>
   `;
   card.querySelector(".btn-ver").addEventListener("click",()=>{
-    hero(vehicles[idx], i);
-    window.scrollTo({top:0,behavior:"smooth"});
+    goToVehicle(idx);
   });
   card.querySelector(".btn-wa").addEventListener("click",async ()=>{
     const txt=makeWhatsappText(v);
@@ -341,21 +372,92 @@ list.forEach((v,i)=>{
 grid.appendChild(frag);
 }
 
-function apply(){
-const q=document.getElementById("search").value.toLowerCase();
+function normalizeSearch(v){
+  return String(v||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function getFiltered(){
+const q=normalizeSearch(document.getElementById("search").value);
 const b=document.getElementById("brand").value;
 const f=document.getElementById("fuel").value;
 const s=document.getElementById("sort").value;
 
 let r=vehicles.filter(v=>{
-const t=(String(v.brand)+" "+String(v.model)+" "+String(v.version)).toLowerCase();
+const t=normalizeSearch(String(v.brand)+" "+String(v.model)+" "+String(v.version));
 return (!q || t.includes(q)) && (!b || v.brand===b) && (!f || v.fuel===f);
 });
 
 if(s==="low") r.sort((a,b)=>Number(a.cashPrice||0)-Number(b.cashPrice||0));
 if(s==="high") r.sort((a,b)=>Number(b.cashPrice||0)-Number(a.cashPrice||0));
+return r;
+}
 
+function renderSearchResults(list){
+const query=document.getElementById("search").value.trim();
+const box=document.getElementById("searchResults");
+const count=document.getElementById("resultCount");
+
+if(!query){
+  box.classList.remove("active");
+  box.innerHTML="";
+  count.innerText="";
+  return;
+}
+
+count.innerText = list.length===1 ? "1 resultado encontrado" : list.length+" resultados encontrados";
+
+if(list.length===0){
+  box.classList.add("active");
+  box.innerHTML='<button class="search-result-item" type="button"><div class="search-result-title">Sin resultados</div><div class="search-result-sub">Prueba con otra palabra</div></button>';
+  return;
+}
+
+box.classList.add("active");
+box.innerHTML=list.slice(0,12).map(v=>{
+  const idx=vehicles.indexOf(v);
+  return `<button class="search-result-item" type="button" data-idx="${idx}">
+    <div class="search-result-title">${text(v.brand)} ${text(v.model)}</div>
+    <div class="search-result-sub">${text(v.version)}</div>
+    <div class="search-result-price">Precio contado: ${money(v.cashPrice)}</div>
+  </button>`;
+}).join("");
+
+box.querySelectorAll(".search-result-item[data-idx]").forEach(btn=>{
+  btn.addEventListener("click",()=>goToVehicle(Number(btn.dataset.idx)));
+});
+}
+
+function goToVehicle(idx){
+const vehicle=vehicles[idx];
+if(!vehicle) return;
+const currentList=getFiltered();
+
+if(!currentList.includes(vehicle)){
+  document.getElementById("search").value="";
+  document.getElementById("brand").value="";
+  document.getElementById("fuel").value="";
+  document.getElementById("sort").value="";
+  render(vehicles);
+  renderSearchResults([]);
+} else {
+  render(currentList);
+}
+
+hero(vehicle, idx);
+setTimeout(()=>{
+  const card=document.getElementById("card-"+idx);
+  if(card){
+    card.scrollIntoView({behavior:"smooth", block:"center"});
+    card.classList.add("highlight");
+    setTimeout(()=>card.classList.remove("highlight"),1600);
+  }
+},80);
+}
+
+function apply(){
+const r=getFiltered();
 render(r);
+renderSearchResults(r);
 }
 
 function clearFilters(){
