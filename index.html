@@ -86,18 +86,9 @@ button{
 }
 .hero{
   display:grid;
-  grid-template-columns:minmax(260px,340px) minmax(0,1fr);
+  grid-template-columns:1fr;
   gap:16px;
   align-items:start;
-}
-.hero img,.card img{
-  width:100%;
-  aspect-ratio:16/10;
-  height:auto;
-  object-fit:cover;
-  border-radius:18px;
-  background:#ddd;
-  display:block;
 }
 .grid{
   display:grid;
@@ -196,8 +187,7 @@ button{
   .header{padding:18px}
   .filters{grid-template-columns:1fr}
   .grid{grid-template-columns:1fr}
-  .hero img,.card img{aspect-ratio:16/9}
-  .pr3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+    .pr3{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
   .pr2{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
   .specs{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
   .actions{grid-template-columns:1fr}
@@ -237,7 +227,6 @@ button{
 </div>
 
 <div class="box hero">
-<img id="heroImg" src="" alt="">
 <div>
 <h2 id="heroTitle">Catálogo</h2>
 <div class="small" id="heroVersion"></div>
@@ -281,7 +270,6 @@ function image(v,i){
 }
 
 function hero(v,i){
-document.getElementById("heroImg").src=image(v,i);
 document.getElementById("heroTitle").innerText=(v.brand||"")+" "+(v.model||"");
 document.getElementById("heroVersion").innerText=text(v.version);
 document.getElementById("pl").innerText=money(v.listPrice);
@@ -334,8 +322,7 @@ list.forEach((v,i)=>{
   card.className="card";
   card.id="card-"+idx;
   card.innerHTML = `
-    <img src="${image(v,i)}" alt="">
-    <h3>${text(v.brand)} ${text(v.model)}</h3>
+        <h3>${text(v.brand)} ${text(v.model)}</h3>
     <div class="small">${text(v.version)}</div>
 
     <div class="pr3">
